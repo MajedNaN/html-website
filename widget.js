@@ -133,6 +133,29 @@ chatWidget.innerHTML = `
       background-color: #005f6b;
     }
 
+    /* تصميم رمز التحميل (Spinner) */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: #007b83; /* لون مطابق لرأس الودجت */
+      animation: spin 1s ease-in-out infinite;
+      -webkit-animation: spin 1s ease-in-out infinite;
+      vertical-align: middle; /* محاذاة عمودية مع النص */
+      margin-left: 8px; /* مسافة بين اسم المرسل والسبينر */
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
     /* تصميم متجاوب (Responsive Design) */
     @media (max-width: 600px) {
       #chatbox {
@@ -206,9 +229,9 @@ async function sendMessage() {
   userInput.value = ''; // مسح حقل الإدخال
   userInput.focus(); // إعادة التركيز على حقل الإدخال
 
-  // إضافة رسالة تحميل مؤقتة
+  // إضافة رسالة تحميل مؤقتة (الآن مع رمز تحميل)
   const loadingMessageId = 'loading-' + Date.now();
-  appendMessage('SmileCare', 'جاري الكتابة...', 'bot', loadingMessageId);
+  appendMessage('SmileCare', '<div class="loading-spinner"></div>', 'bot', loadingMessageId, true); // `true` للإشارة إلى أن النص هو HTML
 
   try {
     const response = await fetch('https://test-widget-git-main-majednans-projects.vercel.app/api/chat', {
@@ -232,7 +255,8 @@ async function sendMessage() {
   }
 }
 
-function appendMessage(sender, text, type, messageId = null) {
+// تم تعديل الدالة لتقبل HTML في النص
+function appendMessage(sender, text, type, messageId = null, isHtml = false) {
   const chatMessages = document.getElementById('chatbox-messages');
   const messageDiv = document.createElement('div');
   messageDiv.className = `message-bubble ${type}-message`;
@@ -244,10 +268,17 @@ function appendMessage(sender, text, type, messageId = null) {
   senderSpan.className = `sender-name sender-${type}`;
   senderSpan.textContent = sender;
 
-  const textNode = document.createTextNode(`: ${text}`); // النص بعد النقطتين
-
   messageDiv.appendChild(senderSpan);
-  messageDiv.appendChild(textNode);
+
+  if (isHtml) {
+    const textContainer = document.createElement('div'); // حاوية للنص أو الـ HTML
+    textContainer.innerHTML = text; // استخدام innerHTML للتعامل مع الـ HTML
+    messageDiv.appendChild(textContainer);
+  } else {
+    const textNode = document.createTextNode(`: ${text}`); // النص بعد النقطتين
+    messageDiv.appendChild(textNode);
+  }
+
   chatMessages.appendChild(messageDiv);
 
   // التمرير لأسفل تلقائيا لعرض أحدث الرسائل
@@ -257,10 +288,18 @@ function appendMessage(sender, text, type, messageId = null) {
 function updateMessage(messageId, sender, newText) {
   const messageDiv = document.getElementById(messageId);
   if (messageDiv) {
-    // إزالة النص القديم وإضافة النص الجديد
-    messageDiv.lastChild.nodeValue = `: ${newText}`;
-    // التأكد من أن الاسم لا يتغير (قد لا تكون هذه الخطوة ضرورية لكنها آمنة)
-    messageDiv.querySelector('.sender-name').textContent = sender;
+    // إزالة أي محتوى موجود (مثل السبينر)
+    while (messageDiv.lastChild && messageDiv.lastChild.nodeType !== Node.TEXT_NODE) {
+      messageDiv.removeChild(messageDiv.lastChild);
+    }
+    // التأكد من أن الاسم لا يتغير
+    const senderSpan = messageDiv.querySelector('.sender-name');
+    if (senderSpan) {
+        senderSpan.textContent = sender;
+    }
+    // إضافة النص الجديد
+    const textNode = document.createTextNode(`: ${newText}`);
+    messageDiv.appendChild(textNode);
   }
   const chatMessages = document.getElementById('chatbox-messages');
   chatMessages.scrollTop = chatMessages.scrollHeight;
