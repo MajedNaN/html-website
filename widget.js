@@ -77,24 +77,27 @@ chatWidget.innerHTML = `
       word-wrap: break-word;
       direction: rtl; /* محاذاة النص داخل الفقاعة من اليمين لليسار */
       display: flex; /* استخدام فليكس بوكس لتنسيق العناصر الداخلية */
-      flex-direction: row-reverse; /* ترتيب العناصر من اليمين لليسار */
-      align-items: flex-start; /* محاذاة العناصر للأعلى */
+      flex-direction: column; /* ترتيب العناصر عمودياً (اسم ثم محتوى) */
+      align-items: flex-end; /* محاذاة المحتوى لليمين داخل الفقاعة */
     }
     .user-message {
       background-color: #dcf8c6;
-      align-self: flex-end; /* محاذاة لليمين */
+      align-self: flex-end; /* محاذاة الفقاعة نفسها لليمين */
       margin-left: auto;
     }
     .bot-message {
       background-color: #ffffff;
       border: 1px solid #e0e0e0;
-      align-self: flex-start; /* محاذاة لليسار */
+      align-self: flex-start; /* محاذاة الفقاعة نفسها لليسار (حسب التصميم) */
       margin-right: auto;
     }
     .sender-prefix {
       font-weight: bold;
       white-space: nowrap; /* منع انقسام الاسم والنقطتين */
-      margin-left: 4px; /* مسافة بين اسم المرسل ومحتوى الرسالة */
+      display: block; /* لجعل الاسم يأخذ سطرًا خاصًا */
+      margin-bottom: 4px; /* مسافة بين اسم المرسل ومحتوى الرسالة */
+      width: 100%; /* لضمان أنه يأخذ العرض الكامل داخل الفقاعة */
+      text-align: right; /* محاذاة النص داخل اسم المرسل لليمين */
     }
     .sender-user {
       color: #0056b3;
@@ -105,6 +108,7 @@ chatWidget.innerHTML = `
     .message-content {
       flex-grow: 1; /* لجعل محتوى الرسالة يملأ المساحة المتبقية */
       text-align: right; /* محاذاة نص المحتوى لليمين */
+      width: 100%; /* لضمان أنه يأخذ العرض الكامل داخل الفقاعة */
     }
 
     #chatbox-input {
@@ -148,7 +152,6 @@ chatWidget.innerHTML = `
       animation: spin 1s ease-in-out infinite;
       -webkit-animation: spin 1s ease-in-out infinite;
       vertical-align: middle; /* محاذاة عمودية مع النص */
-      margin-left: 8px; /* مسافة بين اسم المرسل والسبينر */
     }
 
     @keyframes spin {
