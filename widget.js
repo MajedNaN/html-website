@@ -195,13 +195,13 @@ async function sendMessage() {
     chatbox.classList.remove('collapsed');
   }
 
-  appendMessage('أنت', message, 'user');
+  appendMessage('YOU', message, 'user');
   userInput.value = ''; // مسح حقل الإدخال
   userInput.focus(); // إعادة التركيز على حقل الإدخال
 
   // إضافة رسالة تحميل مؤقتة
   const loadingMessageId = 'loading-' + Date.now();
-  appendMessage('SmileCare', 'جاري الكتابة...', 'bot', loadingMessageId);
+  appendMessage('SmileCare', 'Typing ...', 'bot', loadingMessageId);
 
   try {
     const response = await fetch('https://test-telegram-fawn.vercel.app/api/chat', {
