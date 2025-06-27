@@ -6,7 +6,7 @@ chatWidget.innerHTML = `
       bottom: 20px;
       right: 20px;
       width: 320px;
-      max-height: 450px; /* الارتفاع الأقصى عند الفتح */
+      max-height: 600px; /* تم زيادة الارتفاع الأقصى عند الفتح لجعله أكبر */
       background: white;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -132,7 +132,7 @@ chatWidget.innerHTML = `
         right: 5%;
         left: 5%;
         bottom: 10px;
-        max-height: 80vh;
+        max-height: 90vh; /* تم زيادة الارتفاع على الجوال لجعله أكبر */
       }
       #chatbox.collapsed {
         max-height: 50px; /* يحافظ على الارتفاع عند الطي على الجوال */
