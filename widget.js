@@ -64,7 +64,7 @@ async function sendMessage() {
   appendMessage('أنت', message);
   input.value = '';
 
-  const response = await fetch('/api/chat', {
+  const response = await fetch('https://test-telegram-fawn.vercel.app/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message })
