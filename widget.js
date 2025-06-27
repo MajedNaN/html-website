@@ -201,6 +201,13 @@ const chatboxHeader = document.getElementById('chatbox-header');
 const userInput = document.getElementById('userInput');
 const sendButton = document.getElementById('sendButton');
 
+
+// Replace with your actual APP_API_KEY from Vercel
+const API_KEY = "aibot"; // 
+
+
+
+
 // إضافة مستمع حدث الضغط على زر Enter لحقل الإدخال
 userInput.addEventListener('keypress', function(event) {
   // keyCode 13 هو مفتاح Enter
@@ -243,7 +250,7 @@ async function sendMessage() {
   try {
     const response = await fetch('https://test-widget-git-main-majednans-projects.vercel.app/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' , 'X-API-Key': API_KEY}, // Add your API key here
       body: JSON.stringify({ message })
     });
 
