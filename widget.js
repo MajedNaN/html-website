@@ -6,7 +6,7 @@ chatWidget.innerHTML = `
       bottom: 20px;
       right: 20px;
       width: 320px;
-      max-height: 600px; /* تم زيادة الارتفاع الأقصى عند الفتح لجعله أكبر */
+      max-height: 600px; /* الارتفاع الأقصى عند الفتح */
       background: white;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -58,6 +58,7 @@ chatWidget.innerHTML = `
       padding: 10px;
       font-size: 0.9rem;
       background-color: #f0f0f0;
+      min-height: 400px; /* تم إضافة هذا لجعل الودجت أكبر عند البداية */
       /* عند الطي، يجب إخفاء الرسائل */
       display: flex; /* لضمان التنسيق الصحيح */
       flex-direction: column;
@@ -136,6 +137,9 @@ chatWidget.innerHTML = `
       }
       #chatbox.collapsed {
         max-height: 50px; /* يحافظ على الارتفاع عند الطي على الجوال */
+      }
+      #chatbox-messages {
+        min-height: 60vh; /* تحديد min-height أكبر على الجوال */
       }
     }
   </style>
