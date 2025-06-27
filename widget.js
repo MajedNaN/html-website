@@ -76,26 +76,25 @@ chatWidget.innerHTML = `
       max-width: 80%;
       word-wrap: break-word;
       direction: rtl; /* محاذاة النص داخل الفقاعة من اليمين لليسار */
+      display: flex; /* استخدام فليكس بوكس لتنسيق العناصر الداخلية */
+      flex-direction: row-reverse; /* ترتيب العناصر من اليمين لليسار */
+      align-items: flex-start; /* محاذاة العناصر للأعلى */
     }
     .user-message {
       background-color: #dcf8c6;
-      align-self: flex-end;
+      align-self: flex-end; /* محاذاة لليمين */
       margin-left: auto;
-      text-align: right; /* محاذاة النص داخل فقاعة المستخدم لليمين */
     }
     .bot-message {
       background-color: #ffffff;
       border: 1px solid #e0e0e0;
-      align-self: flex-start;
+      align-self: flex-start; /* محاذاة لليسار */
       margin-right: auto;
-      text-align: right; /* محاذاة النص داخل فقاعة الروبوت لليمين */
     }
-    .sender-name {
+    .sender-prefix {
       font-weight: bold;
-      margin-bottom: 4px;
-      display: block;
-      text-align: right; /* محاذاة اسم المرسل لليمين */
-      direction: rtl; /* ضمان اتجاه النص الصحيح لاسم المرسل */
+      white-space: nowrap; /* منع انقسام الاسم والنقطتين */
+      margin-left: 4px; /* مسافة بين اسم المرسل ومحتوى الرسالة */
     }
     .sender-user {
       color: #0056b3;
@@ -103,6 +102,11 @@ chatWidget.innerHTML = `
     .sender-bot {
       color: #007b83;
     }
+    .message-content {
+      flex-grow: 1; /* لجعل محتوى الرسالة يملأ المساحة المتبقية */
+      text-align: right; /* محاذاة نص المحتوى لليمين */
+    }
+
     #chatbox-input {
       display: flex;
       border-top: 1px solid #ccc;
@@ -255,7 +259,7 @@ async function sendMessage() {
   }
 }
 
-// تم تعديل الدالة لتقبل HTML في النص
+// تم تعديل الدالة لتقبل HTML في النص ولإنشاء هيكل الرسالة الجديد
 function appendMessage(sender, text, type, messageId = null, isHtml = false) {
   const chatMessages = document.getElementById('chatbox-messages');
   const messageDiv = document.createElement('div');
@@ -264,42 +268,44 @@ function appendMessage(sender, text, type, messageId = null, isHtml = false) {
     messageDiv.id = messageId; // تعيين ID لرسائل التحميل
   }
 
-  const senderSpan = document.createElement('span');
-  senderSpan.className = `sender-name sender-${type}`;
-  senderSpan.textContent = sender;
+  // إنشاء اسم المرسل مع النقطتين
+  const senderPrefixSpan = document.createElement('span');
+  senderPrefixSpan.className = `sender-prefix sender-${type}`;
+  senderPrefixSpan.textContent = `${sender}: `; // إضافة النقطتين والمسافة هنا
+  messageDiv.appendChild(senderPrefixSpan);
 
-  messageDiv.appendChild(senderSpan);
+  // إنشاء حاوية لمحتوى الرسالة الفعلي (نص أو HTML)
+  const messageContentSpan = document.createElement('span');
+  messageContentSpan.className = 'message-content';
 
   if (isHtml) {
-    const textContainer = document.createElement('div'); // حاوية للنص أو الـ HTML
-    textContainer.innerHTML = text; // استخدام innerHTML للتعامل مع الـ HTML
-    messageDiv.appendChild(textContainer);
+    messageContentSpan.innerHTML = text; // استخدام innerHTML لرمز التحميل
   } else {
-    const textNode = document.createTextNode(`: ${text}`); // النص بعد النقطتين
-    messageDiv.appendChild(textNode);
+    messageContentSpan.textContent = text; // النص العادي
   }
-
+  
+  messageDiv.appendChild(messageContentSpan);
   chatMessages.appendChild(messageDiv);
 
   // التمرير لأسفل تلقائيا لعرض أحدث الرسائل
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// تم تعديل الدالة لتحديث محتوى الرسالة فقط
 function updateMessage(messageId, sender, newText) {
   const messageDiv = document.getElementById(messageId);
   if (messageDiv) {
-    // إزالة أي محتوى موجود (مثل السبينر)
-    while (messageDiv.lastChild && messageDiv.lastChild.nodeType !== Node.TEXT_NODE) {
-      messageDiv.removeChild(messageDiv.lastChild);
+    // تحديث اسم المرسل في sender-prefix إذا لزم الأمر (لمنع أي تغييرات غير متوقعة)
+    const senderPrefixSpan = messageDiv.querySelector('.sender-prefix');
+    if (senderPrefixSpan) {
+        senderPrefixSpan.textContent = `${sender}: `; // تحديث النص بالاسم والنقطتين
     }
-    // التأكد من أن الاسم لا يتغير
-    const senderSpan = messageDiv.querySelector('.sender-name');
-    if (senderSpan) {
-        senderSpan.textContent = sender;
+
+    // العثور على حاوية محتوى الرسالة وتحديث نصها
+    const messageContentSpan = messageDiv.querySelector('.message-content');
+    if (messageContentSpan) {
+        messageContentSpan.textContent = newText;
     }
-    // إضافة النص الجديد
-    const textNode = document.createTextNode(`: ${newText}`);
-    messageDiv.appendChild(textNode);
   }
   const chatMessages = document.getElementById('chatbox-messages');
   chatMessages.scrollTop = chatMessages.scrollHeight;
