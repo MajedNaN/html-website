@@ -150,7 +150,7 @@ chatWidget.innerHTML = `
     </div>
     <div id="chatbox-messages"></div>
     <div id="chatbox-input">
-      <input type="text" id="userInput" placeholder="اسألني أي حاجة..." />
+      <input type="text" id="userInput" placeholder="اسألني أي حاجة ..." />
       <button id="sendButton">➤</button>
     </div>
   </div>
@@ -201,7 +201,7 @@ async function sendMessage() {
 
   // إضافة رسالة تحميل مؤقتة
   const loadingMessageId = 'loading-' + Date.now();
-  appendMessage('SmileCare', 'جاري الكتابة...', 'bot', loadingMessageId);
+  appendMessage('SmileCare', 'جاري الكتابة ...', 'bot', loadingMessageId);
 
   try {
     const response = await fetch('https://test-telegram-fawn.vercel.app/api/chat', {
