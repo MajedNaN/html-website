@@ -211,7 +211,7 @@ async function sendMessage() {
   appendMessage('SmileCare', 'جاري الكتابة...', 'bot', loadingMessageId);
 
   try {
-    const response = await fetch('https://test-telegram-fawn.vercel.app/api/chat', {
+    const response = await fetch('https://test-widget-git-main-majednans-projects.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message })
